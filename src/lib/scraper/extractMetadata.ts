@@ -115,5 +115,7 @@ export function extractMetadata(html: string, job: ScrapedJob): Partial<ScrapedJ
     grade: grade ? gradeFrom(grade) ?? grade : gradeFrom(text(posting.title) || job.title),
     employmentType: field('employment type','job type') || array(posting.employmentType).map(text).join(', ') || undefined,
     salary,
+    postedAt: text(posting.datePosted) && Number.isFinite(Date.parse(text(posting.datePosted))) ? text(posting.datePosted) : undefined,
+    department: text(posting.occupationalCategory) || undefined,
   };
 }

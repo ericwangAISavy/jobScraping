@@ -44,7 +44,7 @@ The npm cache is configured under `/tmp/job-scraper-npm` for the cloud environme
 
 ## Validation in this cloud environment
 
-Lint, strict TypeScript checking, the production build, and eleven regression tests passed. Chromium checks covered invalid-file messages, real file upload and duplicate removal, the actual API's source error responses, responsive layout, and browser errors. A controlled API response separately verified title sorting, filtering, partial source failure, and exact downloaded Markdown contents.
+Lint, strict TypeScript checking, the production build, and fourteen regression tests passed. Chromium checks covered invalid-file messages, real file upload and duplicate removal, the actual API's source error responses, responsive layout, and browser errors. A controlled API response separately verified title sorting, filtering, partial source failure, and exact downloaded Markdown contents.
 
 Live requests to Anthropic, Cloudflare, and Spotify's Lever careers board were attempted but could not be scraped in this machine: direct public DNS returns `EAI_AGAIN`, and the environment's mandatory egress proxy denies the careers destinations. The native HTTP scraper intentionally does not delegate DNS/IP enforcement to an unverified proxy. Run it on a host with public DNS and direct outbound HTTP(S) to scrape externally. Successful live-site extraction remains unverified here; do not interpret simulated browser results as live-site success.
 
@@ -60,3 +60,18 @@ Combine location, country, location type, grade, employment type, text search, a
 Markdown export contains **only matching jobs**, one link per line. Local caching stores extracted metadata, not raw HTML, and is confined to the current browser/profile and site origin. If browser storage is disabled or full, the app displays a warning and continues with in-memory results.
 
 Metadata-specific verification includes a sidebar fixture matching the supplied Sapient screenshot, JSON-LD, multi-location records, remote eligibility, salary range comparisons, failure isolation, concurrency, and local cache validation. Chromium fixtures verify automatic enrichment, combined filters, filtered Markdown export, cache restoration without network requests, cache clearing, and mobile overflow. A live request to the supplied Sapient detail URL returned a DNS error in this cloud environment; live metadata extraction on that site remains unverified here.
+
+
+## Dashboard layout and controls
+
+The dashboard has a header search, upload and companies sidebar, summary cards, and a paginated Job Links table. Company initials are shown when no verified logo is available. Summary values always come from the current dataset; the app has no seeded demo jobs.
+
+- Category tabs classify roles by department/title heuristics and show counts before filtering.
+- Global search and table search share the same query. Combine location, company, and location-type selectors with country, grade, employment, and salary controls under **Filter**.
+- Pagination shows 10 jobs per page, resets on filter changes, and clamps to the final page. Export includes every matching job across pages, not just the visible page. Markdown and CSV downloads are available in the **Export** menu.
+- Job links mark a role **Seen**. Row menus open full metadata, copy the link, or toggle New/Seen. These states survive refresh and are retained on re-scraping matching links.
+- The companies panel searches sources, filters jobs by clicking a company, opens careers pages, removes sources, and accepts additional URLs via **Add more sources**. Newly added sources are **Ready** until scraped.
+- Posted dates are extracted from JobPosting `datePosted`; absent values are **Unknown**. Last Scraped is the locally recorded discovery timestamp, not a fabricated posting date.
+- The circular header menu manages local data; no account or authentication was added.
+
+Browser checks used controlled 247-job data to exercise pagination, final-page boundaries, search/category/company/metadata filters, filtered Markdown export, details, New/Seen persistence, source addition, company search, mobile wrapping, and console errors. A separate empty-state/upload test verified the discovery-to-enrichment pipeline with controlled responses and CSV download. The cloud network limitation on live scraping remains unchanged.
