@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { readLocalResults, STORAGE_KEY } from '@/lib/localResults';
 import FileUploader from '@/components/FileUploader';
-import { IconBriefcase, IconSearch, IconFilter, IconChevronDown, IconFileDescription, IconBuilding, IconClock, IconArrowRight, IconPlus, IconDotsVertical, IconX, IconCheck, IconBell, IconInfoCircle, IconCloudUpload } from '@tabler/icons-react';
+import { IconBriefcase, IconSearch, IconFilter, IconChevronDown, IconFileDescription, IconBuilding, IconClock, IconArrowRight, IconPlus, IconDotsVertical, IconX, IconCheck, IconBell, IconInfoCircle, IconCloudUpload, IconWorld, IconBolt, IconChartBar } from '@tabler/icons-react';
 import { companyName, relativeScrapeTime } from '@/lib/dashboard';
 import { parseInputFile } from '@/lib/parseInputFile';
 import JobsTable from '@/components/JobsTable';
@@ -81,15 +81,9 @@ export default function Home() {
   const sourceName=(url:string)=>companyName(result?.jobs.find(j=>j.sourceUrl===url)??{sourceUrl:url});
   const companiesWithJobs = new Set(result?.jobs.map(companyName)??[]).size;
   return <div>
-    <header className="app-header flex h-[62px] items-center gap-5 border-b border-[#e2e9f4] bg-white px-8">
-      <div className="brand flex shrink-0 items-center gap-4"><Image src="/assets/neon-logo.png" width={54} height={54} alt="" className="brand-logo"/><h1 className="text-[25px] font-bold tracking-tight">Job Scraper</h1><span className="brand-subtitle text-sm text-[var(--muted)]">Scrape careers pages and browse job listings</span></div>
-      <label className="app-header-search search-wrap ml-auto min-w-0 flex-1 xl:max-w-[700px]"><span className="sr-only">Global job search</span><IconSearch size={18}/><input id="global-job-search" className="control" placeholder="Search jobs by title, company, or location…" value={query} onChange={e=>setQuery(e.target.value)}/><kbd className="search-shortcut" aria-hidden="true">⌘ K</kbd></label>
-      <button className="quiet-button shrink-0 text-xs" aria-expanded={advanced} onClick={()=>setAdvanced(v=>!v)}><IconFilter size={18} className="text-[var(--blue)]"/>Filter<IconChevronDown size={14}/></button>
-      <details className="row-menu notification-menu"><summary aria-label="Scrape notifications"><IconBell size={25}/></summary><div className="row-menu-content"><p className="p-2 text-xs">{busy?progress:result?`${result.jobs.length} jobs in your saved results.`:'No scrape activity yet.'}</p><p className="p-2 text-xs text-[var(--muted)]">{result?.jobs.filter(j=>j.metadataStatus==='failed').length??0} detail pages unavailable</p></div></details>
-      <details className="row-menu"><summary className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--blue)] text-white" aria-label="Local data settings"><span className="text-xl font-semibold">J</span></summary><div className="row-menu-content"><p className="p-2 text-xs text-[var(--muted)]">Saved in this browser</p><button disabled={busy} onClick={clearSaved}>Clear saved results</button></div></details>
-    </header>
     <main className="dashboard-body p-6 pt-[18px]"><div className="dashboard-grid grid grid-cols-[minmax(310px,26.2%)_minmax(0,1fr)] items-start gap-[14px]">
-      <aside className="min-w-0 space-y-[14px]">
+      <aside className="dashboard-sidebar min-w-0 space-y-[14px]">
+      <div className="brand flex shrink-0 items-center gap-4"><Image src="/assets/neon-logo.png" width={54} height={54} alt="" className="brand-logo"/><div><h1 className="text-[25px] font-bold tracking-tight">Job Scraper</h1><span className="brand-subtitle text-sm text-[var(--muted)]">Turn company careers pages<br/>into opportunities</span></div></div>
         <section className="panel upload-panel p-[18px]"><div className="mb-4 flex items-start gap-4"><div className="icon-tile upload-header-icon"><IconCloudUpload size={28}/></div><div><h2 className="text-base font-bold">Upload careers pages</h2><p className="mt-1 text-xs text-[var(--muted)]">Add company careers pages to scrape for job listings.</p></div></div>
           <FileUploader disabled={busy} onLoad={(values,name)=>{setUrls(values);setFilename(name);clearSaved();setError('');setQuery('');setProgress('');}}/>
           <button className="primary mt-3 w-full" disabled={busy||!urls.length} onClick={()=>void scrape()}>{busy?'Scraping…':'Scrape Jobs'}<IconArrowRight size={18}/></button>
@@ -103,7 +97,15 @@ export default function Home() {
           <button className="add-source-button mt-5 flex items-center gap-2 text-xs text-[var(--blue)]" disabled={busy} onClick={()=>sourceDialog.current?.showModal()}><IconPlus size={17}/>Add more sources</button>
         </section>
       </aside>
-      <div className="min-w-0 space-y-4">
+      <div className="dashboard-main min-w-0 space-y-4">
+    <header className="app-header flex h-[62px] items-center gap-5 border-b border-[#e2e9f4] bg-white px-8">
+
+      <label className="app-header-search search-wrap ml-auto min-w-0 flex-1 xl:max-w-[700px]"><span className="sr-only">Global job search</span><IconSearch size={18}/><input id="global-job-search" className="control" placeholder="Search jobs by title, company, or location…" value={query} onChange={e=>setQuery(e.target.value)}/><kbd className="search-shortcut" aria-hidden="true">⌘ K</kbd></label>
+      <button className="quiet-button shrink-0 text-xs" aria-expanded={advanced} onClick={()=>setAdvanced(v=>!v)}><IconFilter size={18} className="text-[var(--blue)]"/>Filter<IconChevronDown size={14}/></button>
+      <details className="row-menu notification-menu"><summary aria-label="Scrape notifications"><IconBell size={25}/></summary><div className="row-menu-content"><p className="p-2 text-xs">{busy?progress:result?`${result.jobs.length} jobs in your saved results.`:'No scrape activity yet.'}</p><p className="p-2 text-xs text-[var(--muted)]">{result?.jobs.filter(j=>j.metadataStatus==='failed').length??0} detail pages unavailable</p></div></details>
+      <details className="row-menu"><summary className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--blue)] text-white" aria-label="Local data settings"><span className="text-xl font-semibold">J</span></summary><div className="row-menu-content"><p className="p-2 text-xs text-[var(--muted)]">Saved in this browser</p><button disabled={busy} onClick={clearSaved}>Clear saved results</button></div></details>
+    </header>
+<section className="global-hero" aria-label="Discover global opportunities"><div className="hero-copy"><h2>Global talent<br/>starts <span>here.</span></h2><p>Scrape company careers pages, discover new opportunities<br className="hero-break"/> and track jobs from around the world.</p><div className="hero-features"><div><IconWorld/><span>Multiple sources<br/>in one place</span></div><div><IconBolt/><span>Fast &amp; reliable<br/>scraping</span></div><div><IconChartBar/><span>Always up-to-date<br/>job listings</span></div></div></div><p className="hero-aside">More<br/>opportunities.<br/><span>A brighter<br/>tomorrow.</span></p></section>
         <section className="stats-grid grid grid-cols-4 gap-[14px]" aria-label="Scraping summary">{[
           {label:'Total Sources',value:urls.length,description:'careers pages loaded',icon:IconFileDescription,tone:'blue'},
           {label:'Total Jobs Found',value:result?.jobs.length??0,description:'across all companies',icon:IconBriefcase,tone:'green'},
