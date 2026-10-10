@@ -75,3 +75,8 @@ The dashboard has a header search, upload and companies sidebar, summary cards, 
 - The circular header menu manages local data; no account or authentication was added.
 
 Browser checks used controlled 247-job data to exercise pagination, final-page boundaries, search/category/company/metadata filters, filtered Markdown export, details, New/Seen persistence, source addition, company search, mobile wrapping, and console errors. A separate empty-state/upload test verified the discovery-to-enrichment pipeline with controlled responses and CSV download. The cloud network limitation on live scraping remains unchanged.
+
+
+## Dark aurora theme
+
+The dashboard uses dark glass surfaces, cyan/violet accents, neon category controls, and generated aurora, swirl-logo, and briefcase assets under `public/assets`. Controls, dialogs, and export menus share the dark theme. The bell displays actual scrape activity; the J menu still manages browser-local data and is not an account. Ctrl+K or Command+K focuses the global search. No example companies or jobs are inserted into actual results.
